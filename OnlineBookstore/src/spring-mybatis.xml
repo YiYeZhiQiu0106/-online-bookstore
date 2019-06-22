@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:p="http://www.springframework.org/schema/p"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/aop 
+         http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://www.springframework.org/schema/tx
+         http://www.springframework.org/schema/tx/spring-tx.xsd">
+     <!-- 开启注解扫描 -->   
+     <context:component-scan base-package="zhl">
+     	<!-- 问题... 排除 controller注解-->
+     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+     </context:component-scan>
+         
+     <!-- 加载conn.properties -->
+     <context:property-placeholder location="classpath:conn.properties"/>  
+     
+     
+     
+     <!-- 配置连接池 -->
+     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+     	<property name="user" value="${user}"></property>
+     	<property name="password" value="${password}"></property>
+     	<property name="jdbcUrl" value="${jdbcUrl}"></property>
+     	<property name="driverClass" value="${driverClass}"></property>
+     	<property name="initialPoolSize" value="${initialPoolSize}"></property>
+     	<property name="maxPoolSize" value="${maxPoolSize}"></property>
+     </bean>  
+         
+     <!-- mybtais与spring整合 
+     	sqlSessionFactoryBean   sqlSessionTemplate 基于session的封装  CURD操作
+      -->    
+     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+     	 <!-- 注入数据源 -->
+     	 <property name="dataSource" ref="dataSource"></property>
+     	 <!-- 读取 mybaits的主配置文件
+     		别名配置    引入mapper文件
+     	 -->
+     	 <property name="configLocation" value="classpath:myBatis-config.xml"></property>
+     </bean>
+     
+     <!-- 配置mybatis的 模板类 基于session的封装  CURD操作 -->
+     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+     	<!-- 使用构造注入属性 -->
+     	<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+     </bean>
+     
+     <!-- 配置事物管理类 -->
+     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+     	<!-- 注入连接池 -->
+     	<property name="dataSource" ref="dataSource"></property>
+     </bean>
+     
+     <!-- 配置事物通知 -->
+     <tx:advice id="txAdvice" transaction-manager="txManager">
+     	<tx:attributes>
+     		<tx:method name="*" read-only="false"/>
+     	</tx:attributes>
+     </tx:advice>
+     
+     <!-- 配置aop -->
+     <aop:config>
+     	<aop:advisor advice-ref="txAdvice" pointcut="execution (* zhl.service.impl.*.*(..))"/>
+     </aop:config>
+     
+     <!-- 配置mybatis的自动扫描mapper文件   dao的接口实现类可以不要 
+     	1.要求 mapper的namespace 指到 接口   包名+接口名称
+     	2.接口的方法名称必须和mapper文件的  节点的id值一致
+     -->
+     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+     	<!-- 指定扫描的路径  dao包名称 -->
+     	<property name="basePackage" value="zhl.dao"></property>
+     	<!-- 注入 sqlSessionFactory -->
+     	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+     </bean>
+</beans>		 

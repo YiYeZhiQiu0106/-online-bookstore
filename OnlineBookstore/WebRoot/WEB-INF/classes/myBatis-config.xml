@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+<configuration>
+	<typeAliases>
+		<typeAlias type="zhl.entity.Book" alias="Book"/>
+		<typeAlias type="zhl.entity.Booktype" alias="Booktype"/>
+		<typeAlias type="zhl.entity.Collectiontable" alias="Collectiontable"/>
+		<typeAlias type="zhl.entity.Orders" alias="Orders"/>
+		<typeAlias type="zhl.entity.Receivingaddress" alias="Receivingaddress"/>
+		<typeAlias type="zhl.entity.Shoppingcart" alias="Shoppingcart"/>
+		<typeAlias type="zhl.entity.Users" alias="Users"/>
+		<typeAlias type="zhl.entity.Administrator" alias="Administrator"/>
+		<typeAlias type="zhl.entity.Evaluate" alias="Evaluate"/>
+		<typeAlias type="zhl.entity.Statistics" alias="Statistics"/>
+		
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="zhl/entity/Book.xml"/>
+		<mapper resource="zhl/entity/Booktype.xml"/>
+		<mapper resource="zhl/entity/Collectiontable.xml"/>
+		<mapper resource="zhl/entity/Orders.xml"/>
+		<mapper resource="zhl/entity/Receivingaddress.xml"/>
+		<mapper resource="zhl/entity/Shoppingcart.xml"/>
+		<mapper resource="zhl/entity/Users.xml"/>
+		<mapper resource="zhl/entity/Administrator.xml"/>
+		<mapper resource="zhl/entity/BookImg.xml"/>
+		<mapper resource="zhl/entity/Evaluate.xml"/>
+		<mapper resource="zhl/entity/Statistics.xml"/>
+	</mappers>
+	
+</configuration> 

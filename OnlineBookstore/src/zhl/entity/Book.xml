@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.BookDaoI">
+          <resultMap id="BookResultMap" type="Book">
+              <id column="b_id" property="b_id"/>
+              <result column="b_name" property="b_name"/>
+              <result column="author" property="author"/>
+              <result column="synopsis" property="synopsis"/>
+              <result column="price" property="price"/>
+              <result column="press" property="press"/>
+              <result column="pre_time" property="pre_time"/>
+              <result column="b_type" property="b_type"/>
+              <result column="img" property="img"/>
+              <result column="packing" property="packing"/>
+              <result column="openbook" property="openbook"/>
+              <result column="isbn" property="isbn"/>
+              <result column="paper" property="paper"/>
+              <result column="suit" property="suit"/>
+              <result column="stock" property="stock"/>
+          </resultMap>
+	
+	<select id="getAllBook" resultMap="BookResultMap">
+	  select * from book limit #{0},#{1}
+	</select>
+	
+	<!-- 图书详情 -->
+	<select id="getOneBook"  resultMap="BookResultMap" parameterType="int">
+	  SELECT * FROM book WHERE b_id =#{b_id}
+	</select>
+	
+	<!-- 模糊查询 ：图书名 -->
+	<select id="dimName" resultMap="BookResultMap" >
+	  SELECT * FROM book WHERE b_name like '%'  #{0} '%'
+	</select>
+	
+	<!-- 根据书名判断书籍是否存在 -->
+	<select id="OneBook" resultType="int" parameterType="String">
+	  SELECT COUNT(*) FROM book WHERE b_name =#{b_name}
+	</select>
+	
+	<!-- 新增书籍 -->
+	<insert id="addBook" parameterType="Book" >
+	   insert into book values(null,#{b_name},#{author},#{synopsis},#{price},#{press},#{pre_time},#{b_type},#{img},#{packing},#{openbook},#{isbn},#{paper},#{suit},#{stock})
+	</insert>
+	
+	<!--删除 -->
+	<delete id="deleteBook" parameterType="int">
+	   delete from book where b_id = #{b_id}
+	</delete>
+	
+	<!-- 修改图书信息 -->
+	<update id="updateBook" parameterType="Book">
+		update book 
+		<set>
+		<if test="b_name!=null">b_name = #{b_name},</if>
+		<if test="author!=null">author = #{author},</if>
+		<if test="synopsis!=null">synopsis = #{synopsis},</if>
+		<if test="price!=0">price = #{price},</if>
+		<if test="press!=null">press = #{press},</if>
+		<if test="pre_time!=null">pre_time = #{pre_time},</if>
+		<if test="packing!=null">packing = #{packing},</if>
+		<if test="openbook!=null">openbook = #{openbook},</if>
+		<if test="isbn!=null">isbn = #{isbn},</if>
+		<if test="paper!=null">paper = #{paper},</if>
+		<if test="img!=null">img = #{img},</if>
+		<if test="suit!=null">suit = #{suit},</if>
+		<if test="stock!=0">stock = #{stock}</if>
+		</set>
+		 where b_id = #{b_id}
+	</update>
+	
+	<!-- 按分类查询图书 -->
+	<select id="findType" resultMap="BookResultMap" >
+	  SELECT * FROM book WHERE b_type like '%'  #{0} '%'
+	</select>
+	
+</mapper>

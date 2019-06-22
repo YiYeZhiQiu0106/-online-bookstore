@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.BookImgDaoI">
+          <resultMap id="BookResultMap" type="Book">
+              <id column="b_id" property="b_id"/>
+              <result column="b_name" property="b_name"/>
+              <result column="author" property="author"/>
+              <result column="img" property="img"/>
+          </resultMap>
+	
+	<select id="getAllBookImg" resultMap="BookResultMap">
+	  select b_id,b_name,author,img from book
+	</select>
+	
+	
+	<!--删除 -->
+	<delete id="deleteBookImg" parameterType="int">
+	   delete from book where b_id = #{b_id}
+	</delete>
+	
+	<!-- 修改图书信息 -->
+	<update id="updateBookImg" parameterType="Book">
+		update book 
+		<set>
+		<if test="b_name!=null">b_name = #{b_name},</if>
+		<if test="author!=null">author = #{author},</if>
+		<if test="img!=null">img = #{img},</if>
+		</set>
+		 where b_id = #{b_id}
+	</update>
+</mapper>

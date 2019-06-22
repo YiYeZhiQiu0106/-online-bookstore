@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.BooktypeDaoI">
+
+   <resultMap type="Booktype" id="TypeMap">
+              <id column="bt_id" property="bt_id"/>
+              <result column="bt_name" property="bt_name"/>
+              <result column="bt_synopsis" property="bt_synopsis"/>
+          </resultMap>
+	
+	<select id="getAllType" resultMap="TypeMap">
+	  select * from booktype
+	</select>
+	
+	<!-- 模糊查询 ：类型名 -->
+	<select id="dimName" resultMap="TypeMap" >
+	  SELECT * FROM booktype WHERE bt_name like '%'  #{0} '%'
+	</select>
+	
+	<!-- 根据类型名判断类型名是否存在 -->
+	<select id="oneType" resultType="int" parameterType="String">
+	  SELECT COUNT(*) FROM booktype WHERE bt_name =#{bt_name}
+	</select>
+	
+	<!-- 新增书籍 -->
+	<insert id="addType" parameterType="Booktype" >
+	   insert into booktype values(null,#{bt_name},#{bt_synopsis})
+	</insert>
+	
+	<!--删除 -->
+	<delete id="deleteType" parameterType="int">
+	   delete from booktype where bt_id = #{bt_id}
+	</delete>
+	
+	<!-- 修改图书信息 -->
+	<update id="updateType" parameterType="Booktype">
+		update booktype 
+		<set>
+		<if test="bt_name!=null">bt_name = #{bt_name},</if>
+		<if test="bt_synopsis!=null">bt_synopsis = #{bt_synopsis},</if>
+		</set>
+		 where bt_id = #{bt_id}
+	</update>
+</mapper>

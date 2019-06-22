@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.OrdersDaoI">
+      <resultMap type="Orders" id="OrdersMap">
+         <id column="o_id" property="o_id"/>
+         <result column="o_state" property="o_state"/>
+         <result column="o_time" property="o_time"/>
+         <result column="num" property="num"/>
+         <result column="u_id" property="u_id"/>
+         <result column="u_name" property="u_name"/>
+         <result column="address" property="address"/>
+         <result column="phone" property="phone"/>
+         <result column="b_id" property="b_id"/>
+         <result column="b_name" property="b_name"/>
+      </resultMap>
+	
+	 <select id="getAllOrders1" resultMap="OrdersMap">
+	  select * from orders where o_state = 1
+	 </select>
+	 
+	 <select id="getAllOrders" resultMap="OrdersMap">
+	  select * from orders where o_state = 0
+	 </select>
+	 
+	 <update id="alterState" parameterType="int" >
+	  update orders set o_state=1 where o_id = #{o_id}
+	 </update>
+	 
+	 <insert id="addOrders" parameterType="Orders">
+	  insert into orders values(null,#{o_state},#{o_time},#{num},#{u_id},#{u_name},#{address},#{phone},#{b_id},#{b_name},#{price},#{money})
+	 </insert>
+	 
+	 <!-- 修改 -->
+	<update id="updateOrders" parameterType="Orders">
+	 update orders 
+	 <set>
+	 	<if test="o_state!=null">o_state = #{o_state},</if>
+		<if test="o_time!=null">o_time = #{o_time},</if>
+		<if test="num!=null">num = #{num},</if>
+		<if test="u_id!=null">u_id = #{u_id},</if>
+		<if test="u_name!=null">u_name = #{u_name},</if>
+		<if test="address!=null">address = #{address},</if>
+		<if test="phone!=null">phone= #{phone},</if>
+		<if test="b_id!=null">b_id = #{b_id},</if>
+		<if test="b_name!=null">b_name = #{b_name},</if>
+		<if test="price!=0">price = #{price},</if>
+		<if test="money!=0">money = #{money},</if>
+	 </set>
+	where o_id = #{o_id}
+	</update>
+	
+	<select id="getUserOrders" resultMap="OrdersMap" parameterType="int">
+	  select * from orders where u_id = #{u_id}
+	</select>
+	
+	<delete id="delOrders" parameterType="int">
+	  delete from orders where o_id = #{o_id}
+	</delete>
+	
+	<update id="addOne" parameterType="int" >
+	  update book set stock=stock+1 where b_id = #{b_id}
+	 </update>
+	 
+	 <update id="minusOne" parameterType="int" >
+	  update book set stock=stock-1 where b_id = #{b_id}
+	 </update>
+	 
+	 <select id="dimO_id" resultMap="OrdersMap" >
+	  select * from orders where o_id =#{0} and o_state=#{1}
+	</select>
+</mapper>

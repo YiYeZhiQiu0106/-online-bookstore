@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.CollectiontabledDaoI">
+    <resultMap type="Collectiontable" id="CollectionMap">
+          <id column="c_id" property="c_id"/>
+          <result column="u_id" property="u_id"/>
+          <result column="b_id" property="b_id"/>
+          <result column="c_time" property="c_time"/>
+          <result column="b_name" property="b_name"/>
+          <result column="author" property="author"/>
+          <result column="price" property="price"/>
+          <result column="press" property="press"/>
+          <result column="pre_time" property="pre_time"/>
+          <result column="packing" property="packing"/>
+    </resultMap>
+	
+	<!-- 用户的个人所有收藏 -->
+	<select id="userCollection" resultMap="CollectionMap">
+	 SELECT c.*,b.b_name,b.author,b.price,b.press,b.pre_time,b.packing FROM collectiontable c LEFT JOIN book b
+     ON c.b_id = b.b_id  WHERE c.u_id=#{u_id}
+	</select>
+	
+	<!-- 用户将图书加入到收藏 -->
+    <insert id="addCollection" parameterType="Collectiontable">
+     insert into Collectiontable values(null,#{u_id},#{b_id},#{c_time})
+    </insert>
+    
+    <!--用户将收藏图书删除-->
+    <delete id="delCollection">
+     delete from Collectiontable where  c_id=#{0}
+    </delete>
+	
+</mapper>

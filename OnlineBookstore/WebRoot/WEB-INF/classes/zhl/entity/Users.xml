@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.UsersDaoI">
+
+     <resultMap id="UsersMap" type="Users">
+       <id column="id" property="id" />
+       <result column="name" property="name"/>
+       <result column="sex" property="sex"/>
+       <result column="pwd" property="pwd"/>
+       <result column="phone" property="phone"/>
+       <result column="age" property="age"/>
+       <result column="balance" property="balance"/>
+       <result column="address" property="address"/>
+       <result column="time" property="time"/>
+     </resultMap>
+     
+    
+     
+     <select id="oneUser" resultMap="UsersMap" parameterType="int">
+	  select * from users where id=#{id}
+	 </select>
+     
+     <select id="getAllUsers" resultMap="UsersMap">
+	  select * from users
+	 </select>
+	
+	<!-- 模糊查询 ：用户名 -->
+	<select id="dimName" resultMap="UsersMap" >
+	  SELECT * FROM users WHERE name like '%'  #{0} '%'
+	</select>
+	
+	<!-- 判断用户名是否存在 -->
+	<select id="OneName" resultType="int" parameterType="String">
+	  SELECT COUNT(*) FROM users WHERE name =#{name}
+	</select>
+	
+	<!-- 判断手机号是否存在 -->
+	<select id="onePhone" resultType="int" parameterType="String">
+	  SELECT COUNT(*) FROM users WHERE phone =#{phone}
+	</select>
+	
+	<insert id="addUser" parameterType="Users">
+	  insert into users values(null,#{name},#{pwd},#{phone},#{balance},#{address},#{time})
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delUser" parameterType="int">
+	   delete from users where id=#{id}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateUser" parameterType="Users">
+	 update users 
+	 <set>
+	 	<if test="name!=null">name = #{name},</if>
+		<if test="pwd!=null">pwd = #{pwd},</if>
+		<if test="phone!=null">phone = #{phone},</if>
+		<if test="balance!=null">balance = #{balance},</if>
+		<if test="address!=null">address= #{address},</if>
+		<if test="time!=null">time = #{time},</if>
+	 </set>
+	where id = #{id}
+	</update>
+	
+	<select id="login" parameterType="Users" resultMap="UsersMap">
+	 select  * from users where phone = #{phone} and pwd = #{pwd}
+	</select>
+</mapper>

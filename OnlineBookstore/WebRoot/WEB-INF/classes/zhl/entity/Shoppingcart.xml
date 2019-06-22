@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.ShoppingcartDaoI">
+  <resultMap type="Shoppingcart" id="shopCatMap">
+    <id column="s_id" property="s_id"/>
+    <result column="u_id" property="u_id"/>
+    <result column="b_id" property="b_id"/>
+    <result column="statis" property="statis"/>
+    <result column="num" property="num"/>
+    <result column="b_name" property="b_name"/>
+    <result column="author" property="author"/>
+    <result column="price" property="price"/>
+    <result column="press" property="press"/>
+    <result column="pre_time" property="pre_time"/>
+    <result column="packing" property="packing"/>
+    <result column="paper" property="paper"/>
+    <result column="img" property="img"/>
+    <result column="reporter" property="reporter"/>
+  </resultMap>
+  
+  <!-- 添加到购物车  -->
+  <insert id="addCat">
+    insert into shoppingcart values(null,#{u_id},#{b_id},#{statis},#{num},#{reporter})
+  </insert>
+  
+  <!-- 我的购物车  状态为1的 （选中状态的） -->
+  <select id="getShopCat1" parameterType="int" resultMap="shopCatMap">
+	  SELECT s_id, s.u_id,s.b_id,s.statis,s.num,b.b_name,b.author,b.price,b.press,b.pre_time,b.packing,b.paper,b.img,s.reporter
+		FROM shoppingcart s LEFT JOIN book b ON s.b_id = b.b_id WHERE  s.statis = 1 and s.u_id=#{u_id} 
+	</select>
+	
+	<!-- 我的购物车 -->
+	<select id="getShopCat" parameterType="int" resultMap="shopCatMap">
+	  SELECT s_id, s.u_id,s.b_id,s.statis,s.num,b.b_name,b.author,b.price,b.press,b.pre_time,b.packing,b.paper,b.img,s.reporter
+		FROM shoppingcart s LEFT JOIN book b ON s.b_id = b.b_id WHERE  s.u_id=#{u_id}	
+	</select>
+	
+	<!-- 选择  ，修改状态 -->
+	<update id="upStatis" >
+	update shoppingcart set statis = #{2} where u_id = #{0} and b_id =#{1} 
+	</update>
+	
+	<!-- 修改数量 -->
+	<update id="upNum" >
+	update shoppingcart set num = #{2} where u_id = #{0} and b_id =#{1} 
+	</update>
+	
+	<!-- 删除一个 -->
+	<delete id="delShop">
+	delete from shoppingcart where u_id = #{0} and b_id =#{1} 
+	</delete>
+	
+	<!--计算总价  -->
+	<select id="reporter" parameterType="int" resultType="float">
+	SELECT SUM(reporter) FROM shoppingcart WHERE u_id =#{u_id} AND statis = 1
+	</select>
+	
+	<!-- 修改小计 -->
+	<update id="upRep" >
+		update shoppingcart set reporter = #{2} where u_id = #{0} and b_id =#{1} 
+	</update>
+	
+	<!-- 删除一个 -->
+	<delete id="delShop1">
+	  delete from shoppingcart where u_id = #{0} and b_id =#{1} and statis = 1
+	</delete>
+	
+	<!-- 查询用户购物车记录的条数 -->
+	<select id="shopCount" parameterType="int" resultType="int">
+	 select count(*) from shoppingcart where u_id= #{u_id}
+	</select>
+	
+	<!-- 同一本图书是否已存在 -->
+	<select id="isOneBook"  resultType="int">
+	 select count(*) from shoppingcart where u_id= #{0} and b_id=#{1}
+	</select>
+</mapper>

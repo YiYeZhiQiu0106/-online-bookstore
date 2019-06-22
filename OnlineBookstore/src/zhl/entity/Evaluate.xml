@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zhl.dao.EvaluateDaoI">
+      <resultMap type="Evaluate" id="EvaluateMap">
+        <id column="e_id" property="e_id" />
+      	<result column="u_id" property="u_id"/>
+        <result column="b_id" property="b_id"/>
+        <result column="name" property="name"/>
+        <result column="evaluate" property="evaluate"/>
+        <result column="e_time" property="e_time"/>
+        <result column="statis" property="statis"/>
+        <result column="goodpoor" property="goodpoor"/>
+        <result column="b_name" property="b_name"/>
+        <result column="author" property="author"/>
+      </resultMap>
+      
+     
+      
+      
+      <!-- 后台显示状态为0(未通过审核的记录)查看的所有评论   1审核中  2通过审核了  3未通过审核 -->
+      <select id="getAllEva" resultMap="EvaluateMap" parameterType="int">
+      SELECT e.*,u.name FROM Evaluate e LEFT JOIN users u ON e.u_id = u.id WHERE statis = #{0}
+      </select>
+      
+      
+      
+      <!-- 前台显示状态为1(通过审核的记录)查看(本图书)的所有评论 -->
+      <select id="getBookEva" resultMap="EvaluateMap" >
+      SELECT e.*,u.name FROM Evaluate e LEFT JOIN users u ON e.u_id = u.id WHERE statis = 2 AND b_id=#{b_id} 
+      </select>
+      
+      <!-- 用户发表评论 -->
+      <insert id="addEva" parameterType="Evaluate">
+      insert into Evaluate values(null,#{evaluate},#{b_id},#{u_id},#{e_time},#{statis},#{goodpoor})
+      </insert>
+      
+      <!--用户查看自己发表过的评论  -->
+	  <select id="getUserEva" parameterType="int" resultMap="EvaluateMap">
+	 	 SELECT t.*,b.b_name,b.author FROM 
+		(SELECT e.* ,u.name FROM Evaluate e LEFT JOIN users u ON e.u_id = u.id WHERE u_id = #{u_id} ) t LEFT JOIN book b
+		ON t.b_id = b.b_id WHERE t.u_id = #{u_id}
+	  </select>
+	  
+	  <!-- 用户删除自己的评论 -->
+	  <delete id="delEva" parameterType="int">
+	    delete from Evaluate where e_id = #{e_id}
+	  </delete>
+	  
+	  <!-- 审核  修改状态 -->
+	  <update id="upEvaSta">
+	   update Evaluate set statis = #{1} where e_id = #{0}
+	  </update>
+	  
+</mapper>
