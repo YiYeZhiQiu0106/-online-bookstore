@@ -29,7 +29,7 @@ public class SmsUtils {
     static final String domain = "dysmsapi.aliyuncs.com";
 
     // 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)，非常重要。不要泄露给其他人
-    static final String accessKeyId = "LTAIQo7A0Ds1iowA";
+    static final String accessKeyId = "LTAIQo7A0dasfghghaewewDs1iwqwqrhqwqqowA";
     static final String accessKeySecret = "246cApw3rNEyzwXZ7D8XxwilYqvAlr";
 
     /**
